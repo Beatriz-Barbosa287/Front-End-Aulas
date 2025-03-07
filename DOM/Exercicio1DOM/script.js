@@ -1,8 +1,24 @@
-let titulo = document.getElementsByTagName("h1");
+//parte 1
+let titulo = document.getElementById("titulo");
+let paragrafo = document.querySelector(".paragrafo");
+
 console.log(titulo);
+console.log(paragrafo);
 
+//parte 2
+function mudartexto() {
+    titulo.innerText = "Novo Título";
+    paragrafo.innerText = "Novo Parágrafo";
+}
 
-let parágrafo = document.getElementsByClassName("paragrafo");
-console.log(parágrafo);
+//parte 3
+function mudarfundo() {
+    let body = document.querySelector("body");
+    body.style.backgroundColor = "blue";
+}
 
-let botao = document
+//parte 4
+function adicionarclasse(){
+    titulo.classList.add("descricao");
+    document.querySelector(".descricao").style.color = "red"
+}
