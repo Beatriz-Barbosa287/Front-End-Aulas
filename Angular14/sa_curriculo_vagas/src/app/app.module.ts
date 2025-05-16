@@ -11,6 +11,7 @@ import { FooterComponent } from './template/footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
 import { PainelVagasComponent } from './view/painel-vagas/painel-vagas.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,8 +23,9 @@ import { PainelVagasComponent } from './view/painel-vagas/painel-vagas.component
     FooterComponent,
     PainelVagasComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, NgbModule, HttpClientModule],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, HttpClientModule, FormsModule],
   providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
+
