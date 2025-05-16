@@ -9,6 +9,8 @@ import { VagasComponent } from './view/vagas/vagas.component';
 import { HeaderComponent } from './template/header/header.component';
 import { FooterComponent } from './template/footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
+import { PainelVagasComponent } from './view/painel-vagas/painel-vagas.component';
 
 @NgModule({
   declarations: [
@@ -17,14 +19,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CurriculoComponent,
     VagasComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    PainelVagasComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, NgbModule, HttpClientModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
