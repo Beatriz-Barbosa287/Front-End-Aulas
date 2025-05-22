@@ -17,14 +17,14 @@
     {
       "id": 3,
       "nome": "Desenvolver Fullstack Senior",
-      "foto": "foto3.jpg",
+      "foto": "foto3.webp",
       "descricao": "Trabalhar com Desenvolvimento Web",
       "salario": 10000
     },
     {
       "id": 4,
       "nome": "Gerente de Nuvem",
-      "foto": "foto4.jpg",
+      "foto": "foto4.webp",
       "descricao": "Vaga de Gerente de Nuvem Geral",
       "salario": 8500
     }
