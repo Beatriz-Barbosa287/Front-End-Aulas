@@ -1,95 +1,91 @@
-import Image from "next/image";
-import styles from "./page.module.css";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
+//client-side 
+"use client";
+
+import { Itarefa } from "@/models/Tarefa";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+
+
+export default function Home(){
+  //useState => aramazenamento localStorage
+  //armazenar as tarefas em um vetor[armazenamento, editor do Armazenamento]
+  const [tarefas, setTarefas] = useState<Itarefa[]>([]);
+  
+  //armazenamento de uma string para o input (titulo da tarefa)
+  const [novaTarefa, setNovaTarefa] = useState<string>("");
+
+  //useEffect => permite a execução de funções , sem o recarregamento da tela
+  useEffect(()=>{
+    //carregar todas as tarefas do Banco de Dados
+    buscarTarefas();
+  }, []);
+
+  //criar as funções que serão executadas na tela
+  const buscarTarefas = async () =>{
+    try {
+      //fetch => método GET é padão não precisa declarar
+      const resposta = await fetch("/api/tarefas"); //conecta com o route.ts
+      //realizar a conexão http com o backend
+      const data = await resposta.json() //converte em json
+      if(data.success){
+        setTarefas(data.data); // armazena a resposta no vetor de tarefas
+      }
+    } catch (error) {
+      console.error(error); //exibe o erro no console
+    }
+  }
+
+  //adiconarTarefa
+  const adicionarTarefa = async(e: FormEvent) =>{
+    e.preventDefault(); //evita o recarregamento da página em eventos HTML
+    //verificar se o texto não está vazio
+    if(!novaTarefa.trim()) return; //não permite adicionar tarefas vazias no BD
+    try {
+      //função post
+      const resultado = await fetch("api/tarefas",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({titulo:novaTarefa})
+      });
+      const data = await resultado.json();
+      if(data.success){//se resultado for ok
+        //adicionar a tarefa no vetor
+        setNovaTarefa(""); //limpa o campo do input
+        //client-side - sem buscar a nova tarefa no BD
+        setTarefas([...tarefas,data.data]);
+        //server-side - buscando a nova tarefa no BD
+        buscarTarefas();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  
+  // atualizarTarefa
+
+
+  // deletarTarefa
+
+
+  //interface do Usuário ReactDom
+  return(
+    <div>
+      <h1>Lista de Tarefas</h1>
+      <form onSubmit={adicionarTarefa}>
+        <input type="text"
+        value={novaTarefa}
+        onChange={(e:ChangeEvent<HTMLInputElement>)=> setNovaTarefa(e.target.value)}
+        placeholder="Adicionar Uma Nova Tarefa" />
+        <button type="submit">Adicionar Tarefa</button>
+      </form>
+      <ul>
+        {tarefas.map((tarefa)=>(
+          <li key={tarefa._id.toString()}>
+            {tarefa.titulo}
           </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        ))}
+      </ul>
     </div>
   );
 }
+
