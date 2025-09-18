@@ -41,7 +41,6 @@ export default function Home(){
     //verificar se o texto não está vazio
     if(!novaTarefa.trim()) return; //não permite adicionar tarefas vazias no BD
     try {
-      //função post
       const resultado = await fetch("api/tarefas",{
         method:"POST",
         headers:{"Content-Type":"application/json"},
@@ -50,10 +49,10 @@ export default function Home(){
       const data = await resultado.json();
       if(data.success){//se resultado for ok
         //adicionar a tarefa no vetor
-        setNovaTarefa(""); //limpa o campo do input
-        //client-side - sem buscar a nova tarefa no BD
+        setNovaTarefa(""); //limpa o campo
+        //client-side 
         setTarefas([...tarefas,data.data]);
-        //server-side - buscando a nova tarefa no BD
+        //server-side
         buscarTarefas();
       }
     } catch (error) {
@@ -62,7 +61,24 @@ export default function Home(){
   }
   
   // atualizarTarefa
-
+  const atualizarTarefa = async (id: string, status: boolean) =>{
+    try {
+      const resposta = await fetch(`/api/tarefas/${id}`,{
+        method:"PATCH",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({concluida: !status})
+      });
+      const data = await resposta.json();
+      if(data.success){
+        //cliente-Side
+        setTarefas(tarefas.map((tarefa)=>(tarefa._id ===id ? data.data : tarefa)));
+        //server-side
+        buscarTarefas();  
+      }
+    } catch (error) {
+      
+    }
+  }
 
   // deletarTarefa
 
@@ -81,6 +97,9 @@ export default function Home(){
       <ul>
         {tarefas.map((tarefa)=>(
           <li key={tarefa._id.toString()}>
+            <input type="checkbox" 
+            checked={tarefa.concluida}
+            onChange={()=>atualizarTarefa(tarefa._id.toString(), tarefa.concluida)}/>
             {tarefa.titulo}
           </li>
         ))}
